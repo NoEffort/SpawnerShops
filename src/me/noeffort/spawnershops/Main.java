@@ -1,5 +1,6 @@
 package me.noeffort.spawnershops;
 
+// Imports
 import java.util.logging.Logger;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
@@ -35,6 +36,9 @@ public class Main
   
   public Main() {}
   
+  /*
+    Initializing Vault Eco for this plugin
+  */
   public void onEnable()
   {
     Bukkit.getServer().getPluginManager().registerEvents(this, this);
@@ -47,6 +51,9 @@ public class Main
     }
   }
   
+  /*
+    Setting up the economy for Vault Eco
+  */
   private boolean setupEconomy()
   {
     if (getServer().getPluginManager().getPlugin("Vault") == null) {
@@ -60,10 +67,18 @@ public class Main
     return econ != null;
   }
   
+  /*
+    Creating the GUI for the player, with the valid items
+  */
   public void openGUI(Player player)
   {
+    // Creating the inventory varible, inv
+    // Bukkit.createInventory (InventoryHolder owner, int size, String title);
     Inventory inv = Bukkit.createInventory(null, 9, "SpawnerShops");
     
+    // Creating the ItemStack for each item
+    // ItemStack x = new ItemStack (org.bukkit.inventory <Basically, Material.item/block>);
+    // ItemMeta y = x.getItemMeta();
     ItemStack sp = new ItemStack(Material.MOB_SPAWNER);
     ItemMeta spm = sp.getItemMeta();
     ItemStack sk = new ItemStack(Material.MOB_SPAWNER);
@@ -79,6 +94,9 @@ public class Main
     ItemStack wi = new ItemStack(Material.MOB_SPAWNER);
     ItemMeta wim = wi.getItemMeta();
     
+    // Creating the ItemMeta for each item
+    // x.setDisplayName (String s);
+    // y.setItemMeta (ItemMeta itemMeta);
     spm.setDisplayName("§8Spider");
     sp.setItemMeta(spm);
     skm.setDisplayName("§7Skeleton");
@@ -94,6 +112,8 @@ public class Main
     wim.setDisplayName("§dWitch");
     wi.setItemMeta(wim);
     
+    // Setting the placement for each item in the inventory <Starts at 0 - 8, not 1 - 9>)
+    // x.setItem(int i, ItemStack itemStack);
     inv.setItem(0, sp);
     inv.setItem(1, sk);
     inv.setItem(2, cr);
@@ -102,9 +122,15 @@ public class Main
     inv.setItem(7, bl);
     inv.setItem(8, wi);
     
+    // Determining which inventory the player will open
     player.openInventory(inv);
   }
   
+  /*
+    The next many lines are all the same
+    They create the InventoryClickEvents for each item made beforehand
+    I will not explain how to use the InventoryClickEvent
+  */
   @EventHandler
   public void onInventoryClickSp(InventoryClickEvent spe)
   {
@@ -337,14 +363,19 @@ public class Main
     }
   }
   
+  /*
+    Creating and Initializing the command that will be used to open the inventory
+  */
   public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args)
   {
+    // Only players can do this command, if they are not a player, tell the log <Console> that it cannot be completed through it)
     if (!(sender instanceof Player))
     {
       Log.info(new Object[] {"§cSpawnerShops can only be used by players!" });
       return true;
     }
-    Player p = (Player)sender;
+    // Creating variable p as the Player. Command cannot be used in Creative Mode as well
+    Player p = (Player) sender;
     if (cmd.getName().equalsIgnoreCase("spawnershops")) {
       if ((!p.hasPermission("ss.use")) || (p.getGameMode() == GameMode.CREATIVE)) {
         p.sendMessage("§cYou cannot use SpawnerShops!");
@@ -352,6 +383,7 @@ public class Main
         openGUI(p);
       }
     }
+    // Command for reloading the config.yml for SpawnerShops
     if (cmd.getName().equalsIgnoreCase("reloadshop")) {
       if (!p.hasPermission("ss.admin"))
       {
@@ -367,6 +399,9 @@ public class Main
     return true;
   }
   
+  /*
+    Sets the spawnerBlock to be the proper spawner when placed
+  */
   public void setSpawner(Block block, EntityType ent)
   {
     BlockState blockState = block.getState();
@@ -375,6 +410,7 @@ public class Main
     blockState.update();
   }
   
+  // Creates each mob already in the SpawnerShops plugin to be recognied and registered
   @EventHandler
   public void onSpawnerPlace(BlockPlaceEvent e)
   {
