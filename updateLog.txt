@@ -7,3 +7,6 @@ Updated, 1.15.17 | 4:47 PM
   
 Updated, 1.16.17 | 8:09 PM
   Issue Debugging, still not 100% fixed.
+  
+Updated, 1.16.17 | 8:20 PM
+  All Bugs Fixed!
