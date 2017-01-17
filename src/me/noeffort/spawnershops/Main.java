@@ -1,6 +1,7 @@
 package me.noeffort.spawnershops;
 
 //Imports
+import java.util.Arrays;
 import java.util.logging.Logger;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
@@ -68,11 +69,11 @@ public class Main
   /*
   Creating the GUI for the player, with the valid items
  */
-  public void openGUI(Player player)
+  public void openSpawnerGUI(Player player)
   {
 	// Creating the inventory varible, inv
 	// Bukkit.createInventory (InventoryHolder owner, int size, String title);
-    Inventory inv = Bukkit.createInventory(null, 9, "SpawnerShops");
+    Inventory inv = Bukkit.createInventory(null, 9, "SpawnerShops - Spawners");
     
     // Creating the ItemStack for each item
     // ItemStack x = new ItemStack (org.bukkit.inventory <Basically, Material.item/block>);
@@ -91,37 +92,84 @@ public class Main
     ItemMeta blazeMeta = blaze.getItemMeta();
     ItemStack witch = new ItemStack(Material.MOB_SPAWNER);
     ItemMeta witchMeta = witch.getItemMeta();
+    ItemStack next = new ItemStack(Material.PAPER);
+    ItemMeta nextMeta = next.getItemMeta();
+    ItemStack cancel = new ItemStack(Material.REDSTONE_BLOCK);
+    ItemMeta cancelMeta = cancel.getItemMeta();
+    
+    //Turning Integers into Strings to use in the lores, will tell the price of the object
+    //String x = Integer.toString(int i);
+    String spiderInt = Integer.toString(getConfig().getInt("Spider"));
+    String skeletonInt = Integer.toString(getConfig().getInt("Skeleton"));
+    String creeperInt = Integer.toString(getConfig().getInt("Creeper"));
+    String zombieInt =  Integer.toString(getConfig().getInt("Zombie"));
+    String ironGolemInt = Integer.toString(getConfig().getInt("IronGolem"));
+    String blazeInt = Integer.toString(getConfig().getInt("Blaze"));
+    String witchInt = Integer.toString(getConfig().getInt("Witch"));
     
     // Creating the ItemMeta for each item
     // x.setDisplayName (String s);
+    // x.setLore (List<String> arg0);
     // y.setItemMeta (ItemMeta itemMeta);
     spiderMeta.setDisplayName("§8Spider");
+    spiderMeta.setLore(Arrays.asList("§eCost: " + spiderInt));
     spider.setItemMeta(spiderMeta);
-    skeletonMeta.setDisplayName("§7skeletonEventleton");
+    skeletonMeta.setDisplayName("§7Skeleton");
+    skeletonMeta.setLore(Arrays.asList("§eCost: " + skeletonInt));
     skeleton.setItemMeta(skeletonMeta);
     creeperMeta.setDisplayName("§aCreeper");
+    creeperMeta.setLore(Arrays.asList("§eCost: " + creeperInt));
     creeper.setItemMeta(creeperMeta);
     zombieMeta.setDisplayName("§2Zombie");
+    zombieMeta.setLore(Arrays.asList("§eCost: " + zombieInt));
     zombie.setItemMeta(zombieMeta);
     ironGolemMeta.setDisplayName("§fIron§6Golem");
+    ironGolemMeta.setLore(Arrays.asList("§eCost: " + ironGolemInt));
     ironGolem.setItemMeta(ironGolemMeta);
     blazeMeta.setDisplayName("§eBlaze");
+    blazeMeta.setLore(Arrays.asList("§eCost: " + blazeInt));
     blaze.setItemMeta(blazeMeta);
     witchMeta.setDisplayName("§dWitch");
+    witchMeta.setLore(Arrays.asList("§eCost: " + witchInt));
     witch.setItemMeta(witchMeta);
+    nextMeta.setDisplayName("§eNext Page");
+    next.setItemMeta(nextMeta);
+    cancelMeta.setDisplayName("§cCancel");
+    cancel.setItemMeta(cancelMeta);
     
     // Setting the placement for each item in the inventory <Starts at 0 - 8, not 1 - 9>)
     // x.setItem(int i, ItemStack itemStack);
     inv.setItem(0, spider);
     inv.setItem(1, skeleton);
     inv.setItem(2, creeper);
-    inv.setItem(4, zombie);
-    inv.setItem(6, ironGolem);
-    inv.setItem(7, blaze);
-    inv.setItem(8, witch);
+    inv.setItem(3, zombie);
+    inv.setItem(4, ironGolem);
+    inv.setItem(5, blaze);
+    inv.setItem(6, witch);
+    inv.setItem(7, next);
+    inv.setItem(8, cancel);
     
     // Determining which inventory the player will open
     player.openInventory(inv);
+  }
+  
+  public void openEggGUI(Player player) {
+	  Inventory inv = Bukkit.createInventory(null, 9, "SpawnerShops - Eggs");
+	  
+	  ItemStack back = new ItemStack(Material.PAPER);
+	  ItemMeta backMeta = back.getItemMeta();
+	  ItemStack cancel = new ItemStack(Material.REDSTONE_BLOCK);
+	  ItemMeta cancelMeta = cancel.getItemMeta();
+	  
+	  backMeta.setDisplayName("§ePrevious Page");
+	  back.setItemMeta(backMeta);
+	  cancelMeta.setDisplayName("§cCancel");
+	  cancel.setItemMeta(cancelMeta);
+	  
+	  inv.setItem(7, back);
+	  inv.setItem(8, cancel);
+	  
+	  player.openInventory(inv);
   }
   
   /*
@@ -129,22 +177,10 @@ public class Main
   They create the InventoryClickEvents for each item made beforehand
   I will not explain how to use the InventoryClickEvent
    */
-  
-  /*
-  HELP! I attempted to check if the user's balance is enough to buy each spawner
-  However, it doesn't seem to work. Look for:
-  
-        else if (econ.getBalance(p) < getConfig().getInt("x")) {
-    	  creeperEvent.setCancelled(true);
-    	  p.sendMessage("§cYou cannot afford this item!");
-      }
-      
-  and submit any possible solutions you can, it will be greatly appreciated!
-   */
   @EventHandler
   public void onInventoryClickSpider(InventoryClickEvent spiderEvent)
   {
-    if (!ChatColor.stripColor(spiderEvent.getInventory().getName()).equalsIgnoreCase("SpawnerShops")) {
+    if (!ChatColor.stripColor(spiderEvent.getInventory().getName()).equalsIgnoreCase("SpawnerShops - Spawners")) {
       return;
     }
     Player p = (Player)spiderEvent.getWhoClicked();
@@ -163,14 +199,14 @@ public class Main
     if (spiderEvent.getCurrentItem().getItemMeta().getDisplayName().equals("§8Spider"))
     {
       EconomyResponse r = econ.withdrawPlayer(p, getConfig().getInt("Spider"));
-      if (r.transactionSuccess())
-      {
-        p.getInventory().addItem(new ItemStack[] { spider });
-        p.closeInventory();
-      }
       if (econ.getBalance(p) < getConfig().getInt("Spider")) {
-    	  spiderEvent.setCancelled(true);
     	  p.sendMessage("§cYou cannot afford this item!");
+    	  spiderEvent.setCancelled(true);
+    	  return;
+      }
+      if (r.transactionSuccess()) {
+          p.getInventory().addItem(new ItemStack[] { spider });
+          p.closeInventory();
       }
       else
     	  p.sendMessage("§4ERROR: Unexpected Results");
@@ -180,7 +216,7 @@ public class Main
 @EventHandler
   public void onInventoryClickSkeleton(InventoryClickEvent skeletonEvent)
   {
-    if (!ChatColor.stripColor(skeletonEvent.getInventory().getName()).equalsIgnoreCase("SpawnerShops")) {
+    if (!ChatColor.stripColor(skeletonEvent.getInventory().getName()).equalsIgnoreCase("SpawnerShops - Spawners")) {
       return;
     }
     Player p = (Player)skeletonEvent.getWhoClicked();
@@ -193,19 +229,19 @@ public class Main
     ItemStack skeleton = new ItemStack(Material.MOB_SPAWNER);
     ItemMeta skeletonMeta = skeleton.getItemMeta();
     
-    skeletonMeta.setDisplayName("§7skeletonEventleton");
+    skeletonMeta.setDisplayName("§7Skeleton");
     skeleton.setItemMeta(skeletonMeta);
-    if (skeletonEvent.getCurrentItem().getItemMeta().getDisplayName().equals("§7skeletonEventleton"))
+    if (skeletonEvent.getCurrentItem().getItemMeta().getDisplayName().equals("§7Skeleton"))
     {
-      EconomyResponse r = econ.withdrawPlayer(p, getConfig().getInt("skeletonEventleton"));
-      if (r.transactionSuccess())
-      {
-        p.getInventory().addItem(new ItemStack[] { skeleton });
-        p.closeInventory();
-      }
-      else if (econ.getBalance(p) < getConfig().getInt("skeletonEventleton")) {
-    	  skeletonEvent.setCancelled(true);
+      EconomyResponse r = econ.withdrawPlayer(p, getConfig().getInt("Skeleton"));
+      if (!r.transactionSuccess() || econ.getBalance(p) < getConfig().getInt("Skeleton")) {
     	  p.sendMessage("§cYou cannot afford this item!");
+    	  skeletonEvent.setCancelled(true);
+    	  return;
+      }
+      if (r.transactionSuccess()) {
+          p.getInventory().addItem(new ItemStack[] { skeleton });
+          p.closeInventory();
       }
       else
     	  p.sendMessage("§4ERROR: Unexpected Results");
@@ -215,7 +251,7 @@ public class Main
   @EventHandler
   public void onInventoryClickCreeper(InventoryClickEvent creeperEvent)
   {
-    if (!ChatColor.stripColor(creeperEvent.getInventory().getName()).equalsIgnoreCase("SpawnerShops")) {
+    if (!ChatColor.stripColor(creeperEvent.getInventory().getName()).equalsIgnoreCase("SpawnerShops - Spawners")) {
       return;
     }
     Player p = (Player)creeperEvent.getWhoClicked();
@@ -232,15 +268,15 @@ public class Main
     creeper.setItemMeta(creeperMeta);
     if (creeperEvent.getCurrentItem().getItemMeta().getDisplayName().equals("§aCreeper"))
     {
-      EconomyResponse ecr = econ.withdrawPlayer(p, getConfig().getInt("Creeper"));
-      if (ecr.transactionSuccess())
-      {
-        p.getInventory().addItem(new ItemStack[] { creeper });
-        p.closeInventory();
-      }
-      else if (econ.getBalance(p) < getConfig().getInt("Creeper")) {
-    	  creeperEvent.setCancelled(true);
+      EconomyResponse r = econ.withdrawPlayer(p, getConfig().getInt("Creeper"));
+      if (!r.transactionSuccess() || econ.getBalance(p) < getConfig().getInt("Creeper")) {
     	  p.sendMessage("§cYou cannot afford this item!");
+    	  creeperEvent.setCancelled(true);
+    	  return;
+      }
+      if (r.transactionSuccess()) {
+          p.getInventory().addItem(new ItemStack[] { creeper });
+          p.closeInventory();
       }
       else
     	  p.sendMessage("§4ERROR: Unexpected Results");
@@ -250,7 +286,7 @@ public class Main
   @EventHandler
   public void onInventoryClickZombie(InventoryClickEvent zombieEvent)
   {
-    if (!ChatColor.stripColor(zombieEvent.getInventory().getName()).equalsIgnoreCase("SpawnerShops")) {
+    if (!ChatColor.stripColor(zombieEvent.getInventory().getName()).equalsIgnoreCase("SpawnerShops - Spawners")) {
       return;
     }
     Player p = (Player)zombieEvent.getWhoClicked();
@@ -267,15 +303,15 @@ public class Main
     zombie.setItemMeta(zombieMeta);
     if (zombieEvent.getCurrentItem().getItemMeta().getDisplayName().equals("§2Zombie"))
     {
-      EconomyResponse ezo = econ.withdrawPlayer(p, getConfig().getInt("Zombie"));
-      if (ezo.transactionSuccess())
-      {
-        p.getInventory().addItem(new ItemStack[] { zombie });
-        p.closeInventory();
-      }
-      else if (econ.getBalance(p) < getConfig().getInt("Zombie")) {
-    	  zombieEvent.setCancelled(true);
+      EconomyResponse r = econ.withdrawPlayer(p, getConfig().getInt("Zombie"));
+      if (!r.transactionSuccess() || econ.getBalance(p) < getConfig().getInt("Zombie")) {
     	  p.sendMessage("§cYou cannot afford this item!");
+    	  zombieEvent.setCancelled(true);
+    	  return;
+      }
+      if (r.transactionSuccess()) {
+          p.getInventory().addItem(new ItemStack[] { zombie });
+          p.closeInventory();
       }
       else
     	  p.sendMessage("§4ERROR: Unexpected Results");
@@ -285,7 +321,7 @@ public class Main
   @EventHandler
   public void onInventoryClickIronGolem(InventoryClickEvent ironGolemEvent)
   {
-    if (!ChatColor.stripColor(ironGolemEvent.getInventory().getName()).equalsIgnoreCase("SpawnerShops")) {
+    if (!ChatColor.stripColor(ironGolemEvent.getInventory().getName()).equalsIgnoreCase("SpawnerShops - Spawners")) {
       return;
     }
     Player p = (Player)ironGolemEvent.getWhoClicked();
@@ -302,15 +338,15 @@ public class Main
     ironGolem.setItemMeta(ironGolemMeta);
     if (ironGolemEvent.getCurrentItem().getItemMeta().getDisplayName().equals("§fIron§6Golem"))
     {
-      EconomyResponse eig = econ.withdrawPlayer(p, getConfig().getInt("IronGolem"));
-      if (eig.transactionSuccess())
-      {
-        p.getInventory().addItem(new ItemStack[] { ironGolem });
-        p.closeInventory();
-      }
-      else if (econ.getBalance(p) < getConfig().getInt("IronGolem")) {
-    	  ironGolemEvent.setCancelled(true);
+      EconomyResponse r = econ.withdrawPlayer(p, getConfig().getInt("IronGolem"));
+      if (!r.transactionSuccess() || econ.getBalance(p) < getConfig().getInt("IronGolem")) {
     	  p.sendMessage("§cYou cannot afford this item!");
+    	  ironGolemEvent.setCancelled(true);
+    	  return;
+      }
+      if (r.transactionSuccess()) {
+          p.getInventory().addItem(new ItemStack[] { ironGolem });
+          p.closeInventory();
       }
       else
     	  p.sendMessage("§4ERROR: Unexpected Results");
@@ -320,7 +356,7 @@ public class Main
   @EventHandler
   public void onInventoryClickBlaze(InventoryClickEvent blazeEvent)
   {
-    if (!ChatColor.stripColor(blazeEvent.getInventory().getName()).equalsIgnoreCase("SpawnerShops")) {
+    if (!ChatColor.stripColor(blazeEvent.getInventory().getName()).equalsIgnoreCase("SpawnerShops - Spawners")) {
       return;
     }
     Player p = (Player)blazeEvent.getWhoClicked();
@@ -337,15 +373,15 @@ public class Main
     blaze.setItemMeta(blazeMeta);
     if (blazeEvent.getCurrentItem().getItemMeta().getDisplayName().equals("§eBlaze"))
     {
-      EconomyResponse ebl = econ.withdrawPlayer(p, getConfig().getInt("Blaze"));
-      if (ebl.transactionSuccess())
-      {
-        p.getInventory().addItem(new ItemStack[] { blaze });
-        p.closeInventory();
-      }
-      else if (econ.getBalance(p) < getConfig().getInt("Blaze")) {
-    	  blazeEvent.setCancelled(true);
+      EconomyResponse r = econ.withdrawPlayer(p, getConfig().getInt("Blaze"));
+      if (!r.transactionSuccess() || econ.getBalance(p) < getConfig().getInt("Blaze")) {
     	  p.sendMessage("§cYou cannot afford this item!");
+    	  blazeEvent.setCancelled(true);
+    	  return;
+      }
+      if (r.transactionSuccess()) {
+          p.getInventory().addItem(new ItemStack[] { blaze });
+          p.closeInventory();
       }
       else
     	  p.sendMessage("§4ERROR: Unexpected Results");
@@ -355,7 +391,7 @@ public class Main
   @EventHandler
   public void onInventoryClickWitch(InventoryClickEvent witchEvent)
   {
-    if (!ChatColor.stripColor(witchEvent.getInventory().getName()).equalsIgnoreCase("SpawnerShops")) {
+    if (!ChatColor.stripColor(witchEvent.getInventory().getName()).equalsIgnoreCase("SpawnerShops - Spawners")) {
       return;
     }
     Player p = (Player)witchEvent.getWhoClicked();
@@ -373,18 +409,114 @@ public class Main
     witch.setItemMeta(witchMeta);
     if (witchEvent.getCurrentItem().getItemMeta().getDisplayName().equals("§dWitch"))
     {
-      EconomyResponse ewi = econ.withdrawPlayer(p, getConfig().getInt("Witch"));
-      if (ewi.transactionSuccess())
-      {
-        p.getInventory().addItem(new ItemStack[] { witch });
-        p.closeInventory();
-      }
-      else if (econ.getBalance(p) < getConfig().getInt("Witch")) {
-    	  witchEvent.setCancelled(true);
+      EconomyResponse r = econ.withdrawPlayer(p, getConfig().getInt("Witch"));
+      if (!r.transactionSuccess() || econ.getBalance(p) < getConfig().getInt("Witch")) {
     	  p.sendMessage("§cYou cannot afford this item!");
+    	  witchEvent.setCancelled(true);
+    	  return;
+      }
+      if (r.transactionSuccess()) {
+          p.getInventory().addItem(new ItemStack[] { witch });
+          p.closeInventory();
       }
       else
     	  p.sendMessage("§4ERROR: Unexpected Results");
+    }
+  }
+  
+  @EventHandler
+  public void onInventoryClickNext(InventoryClickEvent nextEvent)
+  {
+    if (!ChatColor.stripColor(nextEvent.getInventory().getName()).equalsIgnoreCase("SpawnerShops - Spawners")) {
+      return;
+    }
+    Player p = (Player)nextEvent.getWhoClicked();
+    nextEvent.setCancelled(true);
+    if ((nextEvent.getCurrentItem() == null) || (nextEvent.getCurrentItem().getType() == Material.AIR) || (!nextEvent.getCurrentItem().hasItemMeta()))
+    {
+      p.closeInventory();
+      nextEvent.setCancelled(true);
+      return;
+    }
+    ItemStack next = new ItemStack(Material.PAPER);
+    ItemMeta nextMeta = next.getItemMeta();
+    
+    nextMeta.setDisplayName("§eNext Page");
+    next.setItemMeta(nextMeta);
+    if (nextEvent.getCurrentItem().getItemMeta().getDisplayName().equals("§eNext Page")) {
+    	openEggGUI(p);
+    }
+  }
+  
+  @EventHandler
+  public void onInventoryClickBack(InventoryClickEvent backEvent)
+  {
+    if (!ChatColor.stripColor(backEvent.getInventory().getName()).equalsIgnoreCase("SpawnerShops - Eggs")) {
+      return;
+    }
+    Player p = (Player)backEvent.getWhoClicked();
+    backEvent.setCancelled(true);
+    if ((backEvent.getCurrentItem() == null) || (backEvent.getCurrentItem().getType() == Material.AIR) || (!backEvent.getCurrentItem().hasItemMeta()))
+    {
+      p.closeInventory();
+      backEvent.setCancelled(true);
+      return;
+    }
+    ItemStack back = new ItemStack(Material.PAPER);
+    ItemMeta backMeta = back.getItemMeta();
+    
+    backMeta.setDisplayName("§ePrevious Page");
+    back.setItemMeta(backMeta);
+    if (backEvent.getCurrentItem().getItemMeta().getDisplayName().equals("§ePrevious Page")) {
+    	openSpawnerGUI(p);
+    }
+  }
+  
+  @EventHandler
+  public void onInventoryClickCancelSpawner(InventoryClickEvent cancelEvent)
+  {
+    if (!ChatColor.stripColor(cancelEvent.getInventory().getName()).equalsIgnoreCase("SpawnerShops - Spawners")) {
+      return;
+    }
+    Player p = (Player)cancelEvent.getWhoClicked();
+    cancelEvent.setCancelled(true);
+    if ((cancelEvent.getCurrentItem() == null) || (cancelEvent.getCurrentItem().getType() == Material.AIR) || (!cancelEvent.getCurrentItem().hasItemMeta()))
+    {
+      p.closeInventory();
+      cancelEvent.setCancelled(true);
+      return;
+    }
+    ItemStack cancel = new ItemStack(Material.REDSTONE_BLOCK);
+    ItemMeta cancelMeta = cancel.getItemMeta();
+    
+    cancelMeta.setDisplayName("§cCancel");
+    cancel.setItemMeta(cancelMeta);
+    if (cancelEvent.getCurrentItem().getItemMeta().getDisplayName().equals("§cCancel")) {
+    	p.closeInventory();
+    }
+  }
+  
+  @EventHandler
+  public void onInventoryClickCancelEgg(InventoryClickEvent cancelEvent)
+  {
+    if (!ChatColor.stripColor(cancelEvent.getInventory().getName()).equalsIgnoreCase("SpawnerShops - Eggs")) {
+      return;
+    }
+    Player p = (Player)cancelEvent.getWhoClicked();
+    cancelEvent.setCancelled(true);
+    if ((cancelEvent.getCurrentItem() == null) || (cancelEvent.getCurrentItem().getType() == Material.AIR) || (!cancelEvent.getCurrentItem().hasItemMeta()))
+    {
+      p.closeInventory();
+      cancelEvent.setCancelled(true);
+      return;
+    }
+    ItemStack cancel = new ItemStack(Material.REDSTONE_BLOCK);
+    ItemMeta cancelMeta = cancel.getItemMeta();
+    
+    cancelMeta.setDisplayName("§cCancel");
+    cancel.setItemMeta(cancelMeta);
+    if (cancelEvent.getCurrentItem().getItemMeta().getDisplayName().equals("§cCancel")) {
+    	p.closeInventory();
     }
   }
   
@@ -405,7 +537,7 @@ public class Main
       if ((!p.hasPermission("ss.use")) || (p.getGameMode() == GameMode.CREATIVE)) {
         p.sendMessage("§cYou cannot use SpawnerShops!");
       } else {
-        openGUI(p);
+        openSpawnerGUI(p);
       }
     }
     // Command for reloading the config.yml for SpawnerShops
