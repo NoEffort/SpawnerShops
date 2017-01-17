@@ -198,12 +198,12 @@ public class Main
     
     if (spiderEvent.getCurrentItem().getItemMeta().getDisplayName().equals("§8Spider"))
     {
-      EconomyResponse r = econ.withdrawPlayer(p, getConfig().getInt("Spider"));
       if (econ.getBalance(p) < getConfig().getInt("Spider")) {
     	  p.sendMessage("§cYou cannot afford this item!");
     	  spiderEvent.setCancelled(true);
     	  return;
       }
+      EconomyResponse r = econ.withdrawPlayer(p, getConfig().getInt("Spider"));
       if (r.transactionSuccess()) {
           p.getInventory().addItem(new ItemStack[] { spider });
           p.closeInventory();
@@ -233,12 +233,12 @@ public class Main
     skeleton.setItemMeta(skeletonMeta);
     if (skeletonEvent.getCurrentItem().getItemMeta().getDisplayName().equals("§7Skeleton"))
     {
-      EconomyResponse r = econ.withdrawPlayer(p, getConfig().getInt("Skeleton"));
-      if (!r.transactionSuccess() || econ.getBalance(p) < getConfig().getInt("Skeleton")) {
+      if (econ.getBalance(p) < getConfig().getInt("Skeleton")) {
     	  p.sendMessage("§cYou cannot afford this item!");
     	  skeletonEvent.setCancelled(true);
     	  return;
       }
+      EconomyResponse r = econ.withdrawPlayer(p, getConfig().getInt("Skeleton"));
       if (r.transactionSuccess()) {
           p.getInventory().addItem(new ItemStack[] { skeleton });
           p.closeInventory();
@@ -268,12 +268,12 @@ public class Main
     creeper.setItemMeta(creeperMeta);
     if (creeperEvent.getCurrentItem().getItemMeta().getDisplayName().equals("§aCreeper"))
     {
-      EconomyResponse r = econ.withdrawPlayer(p, getConfig().getInt("Creeper"));
-      if (!r.transactionSuccess() || econ.getBalance(p) < getConfig().getInt("Creeper")) {
+      if (econ.getBalance(p) < getConfig().getInt("Creeper")) {
     	  p.sendMessage("§cYou cannot afford this item!");
     	  creeperEvent.setCancelled(true);
     	  return;
       }
+      EconomyResponse r = econ.withdrawPlayer(p, getConfig().getInt("Creeper"));
       if (r.transactionSuccess()) {
           p.getInventory().addItem(new ItemStack[] { creeper });
           p.closeInventory();
@@ -303,12 +303,12 @@ public class Main
     zombie.setItemMeta(zombieMeta);
     if (zombieEvent.getCurrentItem().getItemMeta().getDisplayName().equals("§2Zombie"))
     {
-      EconomyResponse r = econ.withdrawPlayer(p, getConfig().getInt("Zombie"));
-      if (!r.transactionSuccess() || econ.getBalance(p) < getConfig().getInt("Zombie")) {
+      if (econ.getBalance(p) < getConfig().getInt("Zombie")) {
     	  p.sendMessage("§cYou cannot afford this item!");
     	  zombieEvent.setCancelled(true);
     	  return;
       }
+      EconomyResponse r = econ.withdrawPlayer(p, getConfig().getInt("Zombie"));
       if (r.transactionSuccess()) {
           p.getInventory().addItem(new ItemStack[] { zombie });
           p.closeInventory();
@@ -338,12 +338,12 @@ public class Main
     ironGolem.setItemMeta(ironGolemMeta);
     if (ironGolemEvent.getCurrentItem().getItemMeta().getDisplayName().equals("§fIron§6Golem"))
     {
-      EconomyResponse r = econ.withdrawPlayer(p, getConfig().getInt("IronGolem"));
-      if (!r.transactionSuccess() || econ.getBalance(p) < getConfig().getInt("IronGolem")) {
+      if (econ.getBalance(p) < getConfig().getInt("IronGolem")) {
     	  p.sendMessage("§cYou cannot afford this item!");
     	  ironGolemEvent.setCancelled(true);
     	  return;
       }
+      EconomyResponse r = econ.withdrawPlayer(p, getConfig().getInt("IronGolem"));
       if (r.transactionSuccess()) {
           p.getInventory().addItem(new ItemStack[] { ironGolem });
           p.closeInventory();
@@ -373,12 +373,12 @@ public class Main
     blaze.setItemMeta(blazeMeta);
     if (blazeEvent.getCurrentItem().getItemMeta().getDisplayName().equals("§eBlaze"))
     {
-      EconomyResponse r = econ.withdrawPlayer(p, getConfig().getInt("Blaze"));
-      if (!r.transactionSuccess() || econ.getBalance(p) < getConfig().getInt("Blaze")) {
+      if (econ.getBalance(p) < getConfig().getInt("Blaze")) {
     	  p.sendMessage("§cYou cannot afford this item!");
     	  blazeEvent.setCancelled(true);
     	  return;
       }
+      EconomyResponse r = econ.withdrawPlayer(p, getConfig().getInt("Blaze"));
       if (r.transactionSuccess()) {
           p.getInventory().addItem(new ItemStack[] { blaze });
           p.closeInventory();
@@ -409,12 +409,12 @@ public class Main
     witch.setItemMeta(witchMeta);
     if (witchEvent.getCurrentItem().getItemMeta().getDisplayName().equals("§dWitch"))
     {
-      EconomyResponse r = econ.withdrawPlayer(p, getConfig().getInt("Witch"));
-      if (!r.transactionSuccess() || econ.getBalance(p) < getConfig().getInt("Witch")) {
+      if (econ.getBalance(p) < getConfig().getInt("Witch")) {
     	  p.sendMessage("§cYou cannot afford this item!");
     	  witchEvent.setCancelled(true);
     	  return;
       }
+      EconomyResponse r = econ.withdrawPlayer(p, getConfig().getInt("Witch"));
       if (r.transactionSuccess()) {
           p.getInventory().addItem(new ItemStack[] { witch });
           p.closeInventory();
