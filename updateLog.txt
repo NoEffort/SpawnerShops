@@ -10,3 +10,9 @@ Updated, 1.16.17 | 8:09 PM
   
 Updated, 1.16.17 | 8:20 PM
   All Bugs Fixed!
+
+Updated, 1.24.17 | 8:40 PM
+  -Code Reformatted
+    +Assisted by Sonam, added as an Author
+  -Plugin Version Updated
+    Plugin Version: 1.2.1
